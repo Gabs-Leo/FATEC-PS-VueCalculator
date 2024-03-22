@@ -2,6 +2,7 @@
   import { ref } from 'vue'
   defineProps<{ msg: string }>()
 
+  //Enum para verificação de operação.
   enum Operation {
     PLUS, MINUS, DIVIDE, MULTIPLY, NONE
   }
@@ -11,6 +12,7 @@
   const lastOperation = ref<Operation>(Operation.NONE);
   const endOfOperation = ref<boolean>(false);
 
+  //Função para escrever os números no display da calculadora.
   const addNumber = (num:number) => {
     if(outputValue.value === lastNumber.value || endOfOperation.value){
       outputValue.value = "";
@@ -19,7 +21,9 @@
     outputValue.value = `${outputValue.value}${num}`;
   }
 
+  //Executa uma operação com o número atual no display.
   const addNumberToOperation = (operation:Operation) => {
+    //Troca de . por vírgula para se adequar ao sistema numérico do Brasil.
     outputValue.value = outputValue.value.replace(",", ".");
     if(lastOperation.value === Operation.NONE) {
       endOfOperation.value = true;
@@ -29,6 +33,7 @@
       return;
     }
     
+    //Executa operação com os dois números inseridos baseado na operação selecionada.
     switch(lastOperation.value){
       case Operation.PLUS:
         outputValue.value = String(Number(lastNumber.value) + Number(outputValue.value));
@@ -64,11 +69,13 @@
     lastNumber.value = outputValue.value;
   }
 
+  //Função para adicionar a vírgula no display.
   const addPoint = () => {
     if(!outputValue.value.includes(","))
       outputValue.value += ",";
   }
 
+  //Função para gerar resultado e resetar as operações.
   const processOutput = () => {
     addNumberToOperation(lastOperation.value)
     lastNumber.value = "";
@@ -76,6 +83,7 @@
     lastOperation.value = Operation.NONE;
   }
 
+  //Função pra limpar o display.
   const clearField = () => {
     outputValue.value = "";
     lastNumber.value = "";
